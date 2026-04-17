@@ -6,10 +6,10 @@ const Home = () => {
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
-      <section className="hero-section" style={{ 
+      <section className="hero-section" style={{
         position: 'relative',
-        margin: '2rem 0 4rem', 
-        borderRadius: 'var(--radius-lg)', 
+        margin: '2rem 0 4rem',
+        borderRadius: 'var(--radius-lg)',
         overflow: 'hidden',
         backgroundImage: "url('/hero_bg.png')",
         backgroundSize: 'cover',
@@ -24,15 +24,15 @@ const Home = () => {
           zIndex: 1
         }}></div>
 
-        <div style={{ 
-          position: 'relative', 
-          zIndex: 2, 
-          padding: '5rem 3rem', 
+        <div style={{
+          position: 'relative',
+          zIndex: 2,
+          padding: '5rem 3rem',
           maxWidth: '700px',
           textAlign: 'left'
         }}>
           <h1 className="heading-xl">
-            Soporte <span className="text-gradient">Eficiente</span> <br />
+            Soporte <span className="text-gradient">Ineficiente</span> <br />
             para tus Equipos
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '2rem' }}>
@@ -80,16 +80,16 @@ const Home = () => {
       {/* Contact Section */}
       <section className="glass-panel" style={{ display: 'flex', alignItems: 'center', gap: '3rem', flexWrap: 'wrap', overflow: 'hidden' }}>
         <div style={{ flex: '1 1 400px', padding: '3rem' }}>
-          <h2 className="heading-lg">Comunícate <br/>Directamente</h2>
+          <h2 className="heading-lg">Comunícate <br />Directamente</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '1.05rem' }}>
             ¿Problemas urgentes que no pueden esperar a ser atendidos por la plataforma? Contáctate con nuestra central de soporte al <strong style={{ color: 'var(--text-primary)' }}>Anexo 5420</strong> o envía un correo a <strong style={{ color: 'var(--text-primary)' }}>soporte@softcorp.com</strong>.
           </p>
           <Link to="/nueva-incidencia" className="btn btn-secondary">
-             Abrir Ticket
+            Abrir Ticket
           </Link>
         </div>
         <div style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem' }}>
-           <img src="/contact_icon.png" alt="Contact Support" style={{ maxWidth: '100%', maxHeight: '280px', objectFit: 'contain', filter: 'drop-shadow(0 10px 25px rgba(13, 148, 136, 0.15))' }} />
+          <img src="/contact_icon.png" alt="Contact Support" style={{ maxWidth: '100%', maxHeight: '280px', objectFit: 'contain', filter: 'drop-shadow(0 10px 25px rgba(13, 148, 136, 0.15))' }} />
         </div>
       </section>
     </div>
