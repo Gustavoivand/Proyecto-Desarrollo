@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="16" fill="url(#primaryGrad)"/>
+  
+  <!-- Outer C shape -->
+  <path d="M44 20 A 18 18 0 1 0 44 44" stroke="#CCFBF1" stroke-width="5" stroke-linecap="round" />
+  
+  <!-- Inner S shape -->
+  <path d="M37 24 C 37 24 33 21 28 21 C 24 21 22 23 22 26 C 22 29 29 30 31 32 C 34 34 36 37 36 41 C 36 45 32 47 28 47 C 23 47 21 44 21 44" stroke="white" stroke-width="5" stroke-linecap="round" />
+  
+  <!-- Connection dots -->
+  <circle cx="44" cy="20" r="3" fill="white"/>
+  <circle cx="44" cy="44" r="3" fill="white"/>
+  
+  <defs>
+    <linearGradient id="primaryGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D9488"/>
+      <stop offset="1" stop-color="#0369A1"/>
+    </linearGradient>
+  </defs>
+</svg>
