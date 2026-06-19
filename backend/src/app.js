@@ -9,7 +9,13 @@ const errorHandler = require('./middleware/errorHandler.middleware');
 
 const app = express();
 
-app.use(cors());
+//app.use(cors());
+app.use(cors({
+  origin: '*', // Permite que cualquier dominio (incluyendo tu Vercel) se conecte
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
