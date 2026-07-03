@@ -70,7 +70,7 @@ describe('S034: RegistrarIncidencia Form Validation Tests', () => {
     fireEvent.click(screen.getByRole('button', { name: /Registrar Incidencia/i }));
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('http://localhost:3000/api/incidencias', expect.objectContaining({
+      expect(global.fetch).toHaveBeenCalledWith('http://localhost:8080/api/incidencias', expect.objectContaining({
         method: 'POST',
         body: JSON.stringify({
           codigoEquipo: 'SOP-L01',

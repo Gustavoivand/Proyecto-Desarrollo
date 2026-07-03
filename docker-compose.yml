@@ -1,0 +1,105 @@
+﻿services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      CORS_ORIGIN: http://localhost:5173
+      USUARIOS_SERVICE_URL: http://usuarios-service:3001
+      EQUIPOS_SERVICE_URL: http://equipos-service:3002
+      INCIDENCIAS_SERVICE_URL: http://incidencias-service:3003
+      REQUEST_TIMEOUT_MS: 10000
+    depends_on:
+      - usuarios-service
+      - equipos-service
+      - incidencias-service
+    networks:
+      - pc5-network
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:8080/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  usuarios-service:
+    build:
+      context: ./services/usuarios-service
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET in a local .env file}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      SUPABASE_URL: ${SUPABASE_URL:?Define SUPABASE_URL in a local .env file}
+      SUPABASE_KEY: ${SUPABASE_KEY:?Define SUPABASE_KEY in a local .env file}
+      REQUIRE_GATEWAY_HEADER: "true"
+    networks:
+      - pc5-network
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  equipos-service:
+    build:
+      context: ./services/equipos-service
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET in a local .env file}
+      SUPABASE_URL: ${SUPABASE_URL:?Define SUPABASE_URL in a local .env file}
+      SUPABASE_KEY: ${SUPABASE_KEY:?Define SUPABASE_KEY in a local .env file}
+      REQUIRE_GATEWAY_HEADER: "true"
+    networks:
+      - pc5-network
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3002/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  incidencias-service:
+    build:
+      context: ./services/incidencias-service
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET in a local .env file}
+      SUPABASE_URL: ${SUPABASE_URL:?Define SUPABASE_URL in a local .env file}
+      SUPABASE_KEY: ${SUPABASE_KEY:?Define SUPABASE_KEY in a local .env file}
+      EQUIPOS_SERVICE_URL: http://equipos-service:3002
+      USUARIOS_SERVICE_URL: http://usuarios-service:3001
+      REQUIRE_GATEWAY_HEADER: "true"
+      INTERNAL_REQUEST_TIMEOUT_MS: 10000
+    depends_on:
+      - usuarios-service
+      - equipos-service
+    networks:
+      - pc5-network
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3003/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080/api
+    depends_on:
+      - api-gateway
+    networks:
+      - pc5-network
+
+networks:
+  pc5-network:
+    driver: bridge
+
