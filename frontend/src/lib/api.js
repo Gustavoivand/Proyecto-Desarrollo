@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:3000/api';
+const DEFAULT_API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL).replace(/\/+$/, '');
 
 const apiRequest = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
@@ -23,7 +24,7 @@ const apiRequest = async (endpoint, options = {}) => {
   let data;
   try {
     data = await response.json();
-  } catch (err) {
+  } catch {
     data = {};
   }
 
