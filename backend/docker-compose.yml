@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # INFRAESTRUCTURA DE PERSISTENCIA (BASES DE DATOS)
+  # ==========================================
+  
+  # Base de datos exclusiva para el Servicio de Autenticación
+  postgres-auth-db:
+    image: postgres:15-alpine
+    container_name: softcorp-postgres-auth
+    environment:
+      POSTGRES_USER: user_auth
+      POSTGRES_PASSWORD: password_auth
+      POSTGRES_DB: softcorp_auth
+    volumes:
+      - ./auth-service/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - softcorp-network
+    # Nota: No exponemos puertos a la máquina local por seguridad, se queda interno
+
+  # Base de datos exclusiva para el Servicio de Incidencias
+  mysql-incidencias-db:
+    image: mysql:8.0
+    container_name: softcorp-mysql-incidencias
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: softcorp_incidencias
+      MYSQL_USER: user_incidencias
+      MYSQL_PASSWORD: password_incidencias
+    volumes:
+      - ./incidencias-service/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - softcorp-network
+    # Nota: Tampoco expone puertos hacia afuera, aislamiento total
+
+  # ==========================================
+  # MICROSERVICIOS DE NEGOCIO
+  # ==========================================
+
+  auth-service:
+    image: node:18-alpine
+    container_name: softcorp-auth-service
+    working_dir: /app
+    volumes:
+      - ./auth-service:/app
+    command: sh -c "npm install && npm start"
+    environment:
+      PORT: 4001
+      DB_URL: postgres://user_auth:password_auth@postgres-auth-db:5432/softcorp_auth
+      JWT_SECRET: softcorp-super-secret-key-2026
+    depends_on:
+      - postgres-auth-db
+    networks:
+      - softcorp-network
+
+  incidencias-service:
+    image: node:18-alpine
+    container_name: softcorp-incidencias-service
+    working_dir: /app
+    volumes:
+      - ./incidencias-service:/app
+    command: sh -c "npm install && npm start"
+    environment:
+      PORT: 4002
+      DB_HOST: mysql-incidencias-db
+      DB_USER: user_incidencias
+      DB_PASSWORD: password_incidencias
+      DB_NAME: softcorp_incidencias
+    depends_on:
+      - mysql-incidencias-db
+    networks:
+      - softcorp-network
+
+  tecnicos-service:
+    image: node:18-alpine
+    container_name: softcorp-tecnicos-service
+    working_dir: /app
+    volumes:
+      - ./tecnicos-service:/app
+    command: sh -c "npm install && npm start"
+    environment:
+      PORT: 4003
+    networks:
+      - softcorp-network
+
+  # ==========================================
+  # INFRAESTRUCTURA PERIMETRAL (API GATEWAY)
+  # ==========================================
+  
+  api-gateway:
+    image: node:18-alpine
+    container_name: softcorp-api-gateway
+    working_dir: /app
+    volumes:
+      - ./api-gateway:/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "8080:8080" # ÚNICO PUERTO visible para tu Frontend en React
+    environment:
+      PORT: 8080
+      AUTH_SERVICE_URL: http://auth-service:4001
+      INCIDENCIAS_SERVICE_URL: http://incidencias-service:4002
+      TECNICOS_SERVICE_URL: http://tecnicos-service:4003
+    depends_on:
+      - auth-service
+      - incidencias-service
+      - tecnicos-service
+    networks:
+      - softcorp-network
+
+# Red virtual interna para comunicación de microservicios
+networks:
+  softcorp-network:
+    driver: bridge

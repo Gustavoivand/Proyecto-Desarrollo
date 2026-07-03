@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS usuarios (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    rol VARCHAR(20) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    tecnico_id VARCHAR(50)
+);
+
+-- Inyección exacta de la data del monolito
+INSERT INTO usuarios (email, password, rol, nombre, tecnico_id) 
+VALUES ('jefe@softcorp.com', 'jefe123', 'Jefe de Soporte', 'jefe', NULL)
+ON CONFLICT (email) DO NOTHING;
+
+INSERT INTO usuarios (email, password, rol, nombre, tecnico_id) 
+VALUES ('carlos@softcorp.com', 'carlos123', 'Carlos Tecnico', 'tecnico', 'T-CARLOS')
+ON CONFLICT (email) DO NOTHING;
+
+INSERT INTO usuarios (email, password, rol, nombre, tecnico_id) 
+VALUES ('ana@softcorp.com', 'ana123', 'Ana Especialista', 'tecnico', 'T-ANA')
+ON CONFLICT (email) DO NOTHING;
+
+INSERT INTO usuarios (email, password, rol, nombre, tecnico_id) 
+VALUES ('roberto@softcorp.com', 'roberto123', 'Roberto Redes', 'tecnico', 'T-ROBERTO')
+ON CONFLICT (email) DO NOTHING;
