@@ -7,19 +7,23 @@ CREATE TABLE IF NOT EXISTS usuarios (
     tecnico_id VARCHAR(50)
 );
 
--- Inyección exacta de la data del monolito
-INSERT INTO usuarios (email, password, rol, nombre, tecnico_id) 
+-- Inyeccion de la data del monolito --
+-- Jefe de Soporte (rol = 'jefe')
+INSERT INTO usuarios (email, password, nombre, rol, tecnico_id) 
 VALUES ('jefe@softcorp.com', 'jefe123', 'Jefe de Soporte', 'jefe', NULL)
 ON CONFLICT (email) DO NOTHING;
 
-INSERT INTO usuarios (email, password, rol, nombre, tecnico_id) 
+-- Técnico Carlos
+INSERT INTO usuarios (email, password, nombre, rol, tecnico_id) 
 VALUES ('carlos@softcorp.com', 'carlos123', 'Carlos Tecnico', 'tecnico', 'T-CARLOS')
 ON CONFLICT (email) DO NOTHING;
 
-INSERT INTO usuarios (email, password, rol, nombre, tecnico_id) 
+-- Técnico Ana
+INSERT INTO usuarios (email, password, nombre, rol, tecnico_id) 
 VALUES ('ana@softcorp.com', 'ana123', 'Ana Especialista', 'tecnico', 'T-ANA')
 ON CONFLICT (email) DO NOTHING;
 
-INSERT INTO usuarios (email, password, rol, nombre, tecnico_id) 
+-- Técnico Roberto
+INSERT INTO usuarios (email, password, nombre, rol, tecnico_id) 
 VALUES ('roberto@softcorp.com', 'roberto123', 'Roberto Redes', 'tecnico', 'T-ROBERTO')
 ON CONFLICT (email) DO NOTHING;
